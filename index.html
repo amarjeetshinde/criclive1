@@ -1,468 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Sports Select // Live Stream</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Sports Select // Live Stream</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+}
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
 
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1a1a1a;
-        }
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
 
-        .live-badge {
-            background-color: #ffe5e5;
-            color: #ff0000;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
 
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #ff0000;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
+.live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #ffe5e5;
+    color: #ff0000;
+    font-weight: 600;
+}
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
 
-        .video-container {
-            background: linear-gradient(135deg, #c41e8c 0%, #8b1464 100%);
-            border-radius: 12px;
-            padding: 0;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+@keyframes pulse {
+    50% { opacity: 0.4; }
+}
 
-        .video-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><circle cx="200" cy="300" r="150" fill="rgba(0,0,0,0.1)"/><circle cx="1000" cy="400" r="200" fill="rgba(0,0,0,0.1)"/></svg>');
-            opacity: 0.3;
-        }
+/* Video */
+.video-container {
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
 
-        .stream-iframe {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16/9;
-            z-index: 1;
-        }
+.stream-iframe {
+    aspect-ratio: 16 / 9;
+}
 
-        .stream-iframe iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
+.stream-iframe iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
 
-        .message-banner {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-size: 20px;
-            font-weight: 600;
-            text-align: center;
-            z-index: 2;
-        }
+/* Loader */
+.loader {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    z-index: 2;
+}
 
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
+/* Error banner */
+.message-banner {
+    display: none;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 14px 26px;
+    border-radius: 8px;
+    font-size: 16px;
+    z-index: 3;
+}
 
-        .action-btn {
-            flex: 1;
-            min-width: 200px;
-            padding: 16px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+/* Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
 
-        .telegram-btn {
-            background: linear-gradient(135deg, #2AABEE, #229ED9);
-            color: white;
-        }
+.action-btn {
+    flex: 1;
+    min-width: 220px;
+    padding: 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+}
 
-        .telegram-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.4);
-        }
+.telegram-btn {
+    background: linear-gradient(135deg, #2AABEE, #229ED9);
+}
 
-        .share-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
+.share-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
 
-        .share-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
+/* Popup */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
 
-        .btn-icon {
-            font-size: 20px;
-        }
+.popup-overlay.hidden {
+    display: none;
+}
 
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #323232;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-        }
+.popup-content {
+    background: #fff;
+    padding: 35px;
+    border-radius: 14px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+}
 
-        .toast.show {
-            display: flex;
-        }
+.popup-content h2 {
+    margin-bottom: 15px;
+}
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+.popup-content p {
+    color: #666;
+    margin-bottom: 25px;
+}
 
-        /* Popup Styles */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
+.popup-content button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
 
-        .popup-overlay.hidden {
-            display: none;
-        }
+.popup-primary {
+    background: #2AABEE;
+    color: #fff;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+.popup-secondary {
+    background: #f0f0f0;
+}
 
-        .popup-content {
-            background: linear-gradient(to bottom, #fef5f8, #ffffff);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            animation: slideUp 0.4s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .popup-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .popup-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .telegram-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #2AABEE, #229ED9);
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-        }
-
-        .popup-description {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .popup-button {
-            background: linear-gradient(135deg, #2AABEE, #229ED9);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 12px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .popup-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.4);
-        }
-
-        .popup-button-secondary {
-            background: transparent;
-            color: #666;
-            border: 2px solid #e0e0e0;
-            padding: 14px 32px;
-        }
-
-        .popup-button-secondary:hover {
-            background: #f5f5f5;
-            box-shadow: none;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .message-banner {
-                font-size: 14px;
-                padding: 12px 20px;
-                bottom: 20px;
-                max-width: 90%;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                min-width: 100%;
-            }
-
-            .popup-content {
-                padding: 30px 20px;
-            }
-
-            .popup-title {
-                font-size: 24px;
-            }
-
-            .toast {
-                bottom: 20px;
-                right: 20px;
-                left: 20px;
-            }
-        }
-    </style>
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    .message-banner { font-size: 14px; }
+}
+</style>
 </head>
+
 <body>
-    <!-- Popup -->
-    <div class="popup-overlay" id="popup">
-        <div class="popup-content">
-            <div class="popup-title">
-                <div class="telegram-icon">✈</div>
-                Join The Action
-            </div>
-            <p class="popup-description">
-                Get instant updates, match highlights, and exclusive links on our official channel.
-            </p>
-            <button class="popup-button" onclick="joinTelegram()">Join Channel Now</button>
-            <button class="popup-button popup-button-secondary" onclick="closePopup()">I've Already Joined</button>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup">
+    <div class="popup-content">
+        <h2>Join The Action</h2>
+        <p>Get instant updates, highlights & backup links on Telegram.</p>
+        <button class="popup-primary" onclick="joinTelegram()">Join Channel</button>
+        <button class="popup-secondary" onclick="closePopup()">Already Joined</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="header">
+        <div class="logo">Star Sports Select</div>
+        <div class="live-badge">
+            <div class="live-dot"></div> LIVE
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <span>✓</span>
-        <span id="toastMessage">Link copied to clipboard!</span>
-    </div>
+    <div class="video-container">
+        <div class="loader" id="loader">Loading live stream…</div>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="header">
-            <div class="logo">Star Sports Select</div>
-            <div class="live-badge">
-                <div class="live-dot"></div>
-                LIVE NOW
-            </div>
+        <div class="stream-iframe">
+            <iframe
+                id="streamFrame"
+                src="https://allrounderlive.pages.dev/player?url=https://dillzy.cricketstream745.workers.dev/live.m3u8"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen>
+            </iframe>
         </div>
 
-        <div class="video-container">
-            <div class="stream-iframe">
-                <iframe 
-                    src="https://allrounderlive.pages.dev/player?url=https://dillzy.cricketstream745.workers.dev/live.m3u8"
-                    allowfullscreen
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    scrolling="no">
-                </iframe>
-            </div>
-            <div class="message-banner">
-                We are unable to show this sports event
-            </div>
-        </div>
-
-        <div class="action-buttons">
-            <button class="action-btn telegram-btn" onclick="joinTelegram()">
-                <span class="btn-icon">✈</span>
-                <span>Join Telegram Channel</span>
-            </button>
-            <button class="action-btn share-btn" onclick="shareLink()">
-                <span class="btn-icon">🔗</span>
-                <span>Share Live Link</span>
-            </button>
+        <div class="message-banner" id="errorBanner">
+            We are unable to show this sports event
         </div>
     </div>
 
-    <script>
-        // Show popup on page load
-        window.addEventListener('load', function() {
-            document.getElementById('popup').classList.remove('hidden');
-        });
+    <div class="action-buttons">
+        <button class="action-btn telegram-btn" onclick="joinTelegram()">✈ Join Telegram</button>
+        <button class="action-btn share-btn" onclick="shareLink()">🔗 Share Link</button>
+    </div>
 
-        function joinTelegram() {
-            window.open('https://t.me/+PJjsaxYahFM0NzM1', '_blank');
-            closePopup();
-        }
+</div>
 
-        function closePopup() {
-            document.getElementById('popup').classList.add('hidden');
-        }
+<script>
+const frame = document.getElementById("streamFrame");
+const loader = document.getElementById("loader");
+const errorBanner = document.getElementById("errorBanner");
 
-        // Close popup when clicking outside
-        document.getElementById('popup').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePopup();
-            }
-        });
+/* Popup */
+window.onload = () => {
+    document.getElementById("popup").classList.remove("hidden");
+};
 
-        // Share link function
-        function shareLink() {
-            const currentUrl = window.location.href;
-            
-            // Copy to clipboard
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(currentUrl).then(function() {
-                    showToast('Link copied to clipboard!');
-                }).catch(function() {
-                    fallbackCopy(currentUrl);
-                });
-            } else {
-                fallbackCopy(currentUrl);
-            }
-        }
+/* Stream logic */
+let streamTimeout = setTimeout(() => {
+    loader.style.display = "none";
+    errorBanner.style.display = "block";
+}, 7000);
 
-        // Fallback copy method for older browsers
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showToast('Link copied to clipboard!');
-            } catch (err) {
-                showToast('Failed to copy link');
-            }
-            document.body.removeChild(textarea);
-        }
+frame.onload = () => {
+    clearTimeout(streamTimeout);
+    loader.style.display = "none";
+};
 
-        // Show toast notification
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            toastMessage.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(function() {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-    </script>
+/* Actions */
+function joinTelegram() {
+    window.open("https://t.me/+PJjsaxYahFM0NzM1", "_blank");
+    closePopup();
+}
+
+function closePopup() {
+    document.getElementById("popup").classList.add("hidden");
+}
+
+function shareLink() {
+    navigator.clipboard.writeText(location.href);
+    alert("Link copied!");
+}
+</script>
+
 </body>
 </html>
